@@ -4,13 +4,14 @@ using namespace std;
 #include <iostream>
 #include <unistd.h>
 #include <vector>
-#include ""
+//#include ""
 void salir();
 int menu();
 int menu2();
 void movimiento();
 void Juego();
 int kbhit(void);
+void Cargando();
 int main(void)
 {
     int opcion = menu();
@@ -19,7 +20,8 @@ int main(void)
     {
     case 1:
     {
-        escenario= menu2();
+        escenario = menu2();
+        Cargando();
         Juego();
         break;
     }
@@ -134,7 +136,6 @@ void Juego()
     usleep(1000000 / 2);
     curs_set(1);
 }
-}
 
 int menu()
 {
@@ -145,7 +146,7 @@ int menu()
     if (has_colors())
     {
         start_color();
-        init_pair(1, COLOR_GREEN, COLOR_WHITE);
+        init_pair(1, COLOR_WHITE, COLOR_BLACK);
         attron(COLOR_PAIR(1));
         printw("<< MENU PRINCIPAL >>");
         attroff(COLOR_PAIR(1));
@@ -237,6 +238,35 @@ void salir()
     exit(0);
 }
 
+void Cargando()
+{
+    int x, y;
+    getmaxyx(stdscr, y, x);
+    erase();
+    if (has_colors)
+    {
+        start_color();
+        init_pair(1, COLOR_GREEN, COLOR_BLACK);
+        attron(COLOR_PAIR(1));
+        move(y / 2, 15);
+        printw("Espere mientras cargamos los elementos :D ");
+        refresh();
+        usleep(1000000 / 2);
+        printw(".");
+        refresh();
+        usleep(1000000 / 2);
+        printw(".");
+        refresh();
+        usleep(1000000 / 2);
+        printw(".");
+        usleep(1000000 / 2);
+        printw("Cargado!");
+        refresh();
+        usleep(1000000 / 2);
+        attroff(COLOR_PAIR(1));
+    }
+    endwin();
+}
 
 int kbhit(void)
 {
@@ -273,7 +303,7 @@ int menu2()
     if (has_colors())
     {
         start_color();
-        init_pair(1, COLOR_GREEN, COLOR_WHITE);
+        init_pair(1, COLOR_WHITE, COLOR_BLACK);
         attron(COLOR_PAIR(1));
         printw("<< TIPO DE MENU >>");
         attroff(COLOR_PAIR(1));
