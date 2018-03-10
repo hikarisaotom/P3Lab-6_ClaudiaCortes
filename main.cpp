@@ -1,26 +1,50 @@
 using namespace std;
 #include <ncurses.h>
+#include <string>
 #include <stdio.h>
 #include <iostream>
+#include <sstream>
 #include <unistd.h>
 #include <vector>
-//#include ""
+#include "Bombas.h"
+//#include "Normal.h"
+#include "Espina.h"
+#include "Jugador.h"
+#include "V.h"
+#include "Item.h"
+#include "Escenario.h"
+#include "Tren.h"
+#include "Invisible.h"
 void salir();
 int menu();
 int menu2();
+int menu3();
+string menunombre();
 void movimiento();
 void Juego();
 int kbhit(void);
 void Cargando();
 int main(void)
-{
+{ /*#Normal 
+Normal.o: Normal.h Normal.cpp Bombas.h
+	g++ -c Normal.cpp*/
+    Escenario * Tablero;
     int opcion = menu();
     int escenario;
+    int bomba;
     switch (opcion)
     {
     case 1:
     {
         escenario = menu2();
+        bomba = menu3();
+        string nombre= menunombre();
+         if (escenario == 1)
+        {
+            Tablero=new Invisible();
+        }else{
+            Tablero = new Tren(nombre,bomba);
+        }
         Cargando();
         Juego();
         break;
@@ -28,7 +52,6 @@ int main(void)
     case 2:
     { //Salir.
         salir();
-
         break;
     }
     } //Fin del switch
@@ -362,4 +385,116 @@ int menu2()
     }
     echo();
     return 0;
+}
+
+int menu3()
+{
+    erase();
+    initscr();
+    int x, y;
+    getmaxyx(stdscr, y, x);
+    move(0, (x / 2 - 18));
+    if (has_colors())
+    {
+        start_color();
+        init_pair(1, COLOR_WHITE, COLOR_BLACK);
+        attron(COLOR_PAIR(1));
+        printw("<< TIPO DE BOMBAS >>");
+        attroff(COLOR_PAIR(1));
+        init_pair(2, COLOR_CYAN, COLOR_BLACK);
+        attron(COLOR_PAIR(2));
+        move(1, 0);
+        printw("Seleccione el tipo de Bomba que desea utilizar:\n");
+        move(2, 1);
+        printw("1)Bomba Normal. \n");
+        move(3, 1);
+        printw("2)Bomba Espina \n");
+        move(4, 1);
+        printw("3)Bomba V   \n");
+        printw("Tipo de escenario seleccionado: ");
+        attroff(COLOR_PAIR(2));
+    }
+    int cx = 0;
+    int cy = 2;
+    int tecla;
+    move(cy, cx);
+    refresh();
+    while (true)
+    {
+        noecho();
+        tecla = getch();
+        if (tecla == 10)
+        {
+            if (cy == 2)
+            {
+                return 1;
+            }
+            if (cy == 3)
+            {
+                return 2;
+            }
+            if (cy == 4)
+            {
+                return 3;
+            }
+        }
+        else
+        {
+            //printw("%i",tecla);
+            if (tecla == 65 && cy > 2)
+            {
+                //printw(" arriba");
+                cy = cy - 1;
+                move(cy, cx);
+            }
+            else if (tecla == 66 && cy <= 4)
+            {
+                //printw(" abajo");
+                cy = cy + 1;
+                move(cy, cx);
+            }
+            else
+            {
+                //No hara nada
+            }
+        }
+        refresh();
+    }
+    echo();
+    return 0;
+}
+
+string  menunombre()
+{
+    erase();
+    initscr();
+    int x, y;
+    getmaxyx(stdscr, y, x);
+    move(0, (x / 2 - 18));
+    string Nombre;
+    if (has_colors())
+    {
+        start_color();
+        init_pair(1, COLOR_WHITE, COLOR_BLACK);
+        attron(COLOR_PAIR(1));
+        printw("<< DATOS DEL JUGADOR >>");
+        attroff(COLOR_PAIR(1));
+        init_pair(2, COLOR_CYAN, COLOR_BLACK);
+        attron(COLOR_PAIR(2));
+        move(1, 0);
+        printw("Ingrese su nombre porfavor  :\n");
+        string Nombre;
+        char ch = getch();
+        stringstream ss;
+        while (ch != '\n')
+        {
+            Nombre.push_back(ch);
+            ss << ch;
+            ch = getch();
+        }
+        attroff(COLOR_PAIR(2));
+    }
+    
+    echo();
+    return Nombre;
 }
